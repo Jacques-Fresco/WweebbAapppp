@@ -5,6 +5,8 @@ import Protected from "./components/Protected";
 import LoginForm from "./components/Login";
 import Logout from "./components/Logout";
 import SignUp from "./components/SignUp";
+import ProfileForm from "./components/Profile";
+import ChatAllUsers from "./components/Chat";
 
 const AppRoutes = [
   {
@@ -36,6 +38,16 @@ const AppRoutes = [
     path: '/signup',
     element: <SignUp />,
     isPrivate: false
+  },
+  {
+      path: '/profile',
+      element: <ProfileForm />,
+      isPrivate: true
+  },
+  {
+      path: '/chat',
+      element: <ChatAllUsers />,
+      isPrivate: true
   }
 ];
 

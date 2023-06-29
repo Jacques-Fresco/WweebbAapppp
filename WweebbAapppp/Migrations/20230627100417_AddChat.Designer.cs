@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WweebbAapppp;
 
@@ -11,9 +12,10 @@ using WweebbAapppp;
 namespace WweebbAapppp.Migrations
 {
     [DbContext(typeof(VehicleQuotesContext))]
-    partial class VehicleQuotesContextModelSnapshot : ModelSnapshot
+    [Migration("20230627100417_AddChat")]
+    partial class AddChat
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -191,13 +193,14 @@ namespace WweebbAapppp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Messages");
+                    b.HasIndex("ChatId");
+
+                    b.ToTable("Message");
                 });
 
             modelBuilder.Entity("VehicleQuotes.Models.BodyType", b =>
@@ -588,6 +591,17 @@ namespace WweebbAapppp.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("NamespaceChat.Message", b =>
+                {
+                    b.HasOne("NamespaceChat.Chat", "Chat")
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
+                });
+
             modelBuilder.Entity("VehicleQuotes.Models.Model", b =>
                 {
                     b.HasOne("VehicleQuotes.Models.Make", "Make")
@@ -671,6 +685,11 @@ namespace WweebbAapppp.Migrations
                         .IsRequired();
 
                     b.Navigation("ModelStyleYear");
+                });
+
+            modelBuilder.Entity("NamespaceChat.Chat", b =>
+                {
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("VehicleQuotes.Models.Model", b =>

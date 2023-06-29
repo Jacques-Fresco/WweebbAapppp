@@ -10,15 +10,17 @@ import { setAuthenticated, removeAuthenticated } from './redux/actions';
 class App extends Component {
     static displayName = App.name;
 
-/*    constructor(props) {
+    constructor(props) {
         super(props);
 
-        this.state = {
+        props.setAuthenticated();
+
+       /* this.state = {
             isAuthenticated: false
-        };
+        };*/
     }
 
-    setAuthenticated = () => {
+/*    setAuthenticated = () => {
         this.setState({
             isAuthenticated: true
         });
@@ -30,11 +32,11 @@ class App extends Component {
         this.checkAuthentication();
     }
 
-    componentDidUpdate(prevProps, prevState) {
+/*    componentDidUpdate(prevProps, prevState) {
         if (prevProps.isAuthenticated !== this.props.isAuthenticated) {
             this.checkAuthentication();
         }
-    }
+    }*/
 
     checkAuthentication = async () => {
         console.log("checkAuthentication");
@@ -66,6 +68,7 @@ class App extends Component {
             //console.log("hi");
         } else if (accessToken && isAccessTokenExpired) {
             if (refreshToken && isRefreshTokenExpired) {
+                await this.props.removeAuthenticated();
                 return;
             }
 

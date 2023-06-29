@@ -17,6 +17,8 @@ using WweebbAapppp;
 using Newtonsoft.Json.Linq;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.EntityFrameworkCore;
+using NamespaceChat;
 
 namespace VehicleQuotes.Controllers
 {
@@ -122,12 +124,83 @@ namespace VehicleQuotes.Controllers
             };
         }
 
+        [HttpGet("data-profile")]
+        [Authorize]
+        public async Task<ActionResult<FullDataProfileDTO>> GetDataProfile() //Task<IActionResult> GetDataProfile()
+        {
+            /*if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }*/
+
+            string userIdFromToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            IdentityUser user = await _userManager.FindByIdAsync(userIdFromToken);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            FullDataProfileDTO fullDataProfile = new FullDataProfileDTO
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                PasswordHash = user.PasswordHash
+            };
+
+            return Ok(fullDataProfile);
+        }
+
+        [HttpPost("save-data-profile")]
+        [Authorize]
+        public async Task<IActionResult> PostSaveDataProfile(UsernameOrPasswordModel data) //[FromBody] )
+        {
+            if (data.username == null && data.password == null) {
+                return BadRequest();
+            } else {
+                string userIdFromToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                IdentityUser user = await _userManager.FindByIdAsync(userIdFromToken);
+
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                if (data.username != null)
+                {
+                    user.UserName = data.username;
+                } 
+
+                if (data.password != null)
+                {
+                    string newPasswordHash = _userManager.PasswordHasher.HashPassword(user, data.password);
+                    user.PasswordHash = newPasswordHash;
+                }
+
+                await _userManager.UpdateAsync(user);
+                await _context.SaveChangesAsync();
+            };
+
+            return Ok(new { message = "Изменения сохранены." });
+        }
+
         [HttpPost("login")]
         public async Task<ActionResult<AuthenticationResponse>> Login(AuthenticationRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Bad credentials");
+            }
+
+            try
+            {
+                var userrrr = await _userManager.FindByNameAsync(request.UserName);
+            }
+            catch (Exception ex)
+            {
+                // Обработка исключения или вывод сообщения об ошибке
             }
 
             var user = await _userManager.FindByNameAsync(request.UserName);
@@ -309,14 +382,14 @@ namespace VehicleQuotes.Controllers
             try
             {
                 var email = new MimeMessage();
-                email.From.Add(MailboxAddress.Parse("montana.lind38@ethereal.email"));
-                email.To.Add(MailboxAddress.Parse("montana.lind38@ethereal.email"));
+                email.From.Add(MailboxAddress.Parse("ward.moen2@ethereal.email"));
+                email.To.Add(MailboxAddress.Parse("ward.moen2@ethereal.email"));
                 email.Subject = "Test Email Subject";
                 email.Body = new TextPart(TextFormat.Html) { Text = body };
 
                 using var smtp = new SmtpClient();
                 smtp.Connect("smtp.ethereal.email", 587, SecureSocketOptions.StartTls);
-                smtp.Authenticate("monique85@ethereal.email", "7SpkeyZ7zTXYz513Md");
+                smtp.Authenticate("ward.moen2@ethereal.email", "cypE5NAN9SHkwRuc5D");
                 smtp.Send(email);
                 smtp.Disconnect(true);
 

@@ -42,10 +42,22 @@ export class NavMenu extends Component {
                 <NavLink tag={Link} className="text-dark" to="/fetch-data">Fetch data</NavLink>
               </NavItem>
               <NavItem>
-              <NavLink tag={Link}
+                <NavLink tag={Link} className="text-dark" to="/chat">Chat</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link}
                        style={{ backgroundColor: 'green', color: 'red' }}
                        className="text-dark" to={isAuthenticated ? '/logout' : '/login'}>{isAuthenticated ? 'Logout' : 'Log In'}</NavLink>
               </NavItem>
+              {isAuthenticated && (
+                  <>
+                       <NavItem>
+                           <NavLink tag={Link}
+                               style={{ backgroundColor: 'green', color: 'red' }}
+                               className="text-dark" to="/Profile">Profile</NavLink>
+                       </NavItem>
+                  </>
+              )}
               {!isAuthenticated && (
                   <>
                       <NavItem>

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using VehicleQuotes.Models;
 using WweebbAapppp.Models;
+using NamespaceChat;
 
 
 namespace WweebbAapppp
@@ -28,6 +29,13 @@ namespace WweebbAapppp
         public DbSet<QuoteOverride> QuoteOverides { get; set; }
 
         public DbSet<Quote> Quotes { get; set; }
+
+
+
+        public DbSet<Chat> Chat { get; set; }
+        public DbSet<Message> Messages { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
