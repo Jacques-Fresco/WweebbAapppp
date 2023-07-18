@@ -4,12 +4,12 @@ using System.Threading.Tasks;
 
 namespace WweebbAapppp.Hubs
 {
-    [Authorize]
-    public class ChatHub : Hub
+    //[Authorize]
+    public class MessageHub : Hub
     {
-        public async Task SendMessage(string message)
+        /*public async Task SendMessage(string message)
         {
             await Clients.All.SendAsync("newMessage", message);
-        }
+        }*/
     }
 }

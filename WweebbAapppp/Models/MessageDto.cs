@@ -7,7 +7,7 @@ namespace WweebbAapppp.Models
         /*[Required]
         public int Id { get; set; }*/
         [Required]
-        public string? text { get; set; }
+        public string? message { get; set; }
         [Required]
         public string? senderid { get; set; }
         [Required]

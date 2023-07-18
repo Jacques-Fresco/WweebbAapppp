@@ -30,7 +30,7 @@ const ProfileForm = () => {
         try {
             const accessToken = localStorage.getItem('accessToken');
             console.log(accessToken);
-            const response = await fetch('https://localhost:7089/api/Users/data-profile', {
+            const response = await fetch('/api/Users/data-profile', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -85,7 +85,7 @@ const ProfileForm = () => {
     const handleSaveClick = () => {
         console.log("тууут", editedData.userName);
 
-        fetch('https://localhost:7089/api/Users/save-data-profile', {
+        fetch('/api/Users/save-data-profile', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -137,7 +137,7 @@ const ProfileForm = () => {
     }
 
     const handlerSavePassword = () => {
-        fetch('https://localhost:7089/api/Users/save-data-profile', {
+        fetch('/api/Users/save-data-profile', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

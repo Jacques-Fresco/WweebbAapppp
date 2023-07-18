@@ -9,6 +9,8 @@ const LoginForm = () => {
 
     const dispatch = useDispatch();
 
+    console.log(window.location.href);
+
     //const value = useSelector(state => state.auth.isAuthenticated);
 
     const handleSubmit = async (e) => {
@@ -18,7 +20,9 @@ const LoginForm = () => {
         console.log(password);
 
         try {
-            const response = await fetch('https://localhost:7089/api/Users/login', {
+            //const response = await fetch('https://192.168.0.102:44486/api/Users/login', {
+            //const response = await fetch('https://localhost:44486/api/Users/login', {
+            const response = await fetch('/api/Users/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

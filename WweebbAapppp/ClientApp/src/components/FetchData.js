@@ -56,7 +56,7 @@ export class FetchData extends Component {
     async populateWeatherData() {
         const accessToken = localStorage.getItem('accessToken');
 
-        const response = await fetch('https://localhost:7089/api/weatherforecast/Weather', {
+        const response = await fetch('/api/weatherforecast/Weather', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

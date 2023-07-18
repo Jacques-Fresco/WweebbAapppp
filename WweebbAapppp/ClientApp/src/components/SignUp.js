@@ -10,7 +10,7 @@ const LoginForm = () => {
         e.preventDefault();
 
         try {
-            const response = await fetch('https://localhost:7089/api/Users/signup', {
+            const response = await fetch('/api/Users/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

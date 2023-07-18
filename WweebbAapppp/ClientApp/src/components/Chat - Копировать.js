@@ -1,50 +1,52 @@
 ﻿import React, { useState, useEffect } from 'react';
 import jwt from 'jsonwebtoken';
-import * as signalR from '@microsoft/signalr';
+import { signalR } from '@microsoft/signalr';
 
 const ChatAllUsers = () => {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const accessToken = localStorage.getItem('accessToken');
 
+    const protocolPrefix = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    let { host } = window.location;
+
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl('/chatHub', {
+            accessTokenFactory: () => accessToken,
+        })
+        .build();
+
     const decodedToken = jwt.decode(accessToken);
     const nameIdentifier = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
     const userName = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
 
-    const [hubConnection, setHubConnection] = useState(null);
+    const handleNewMessage = (message) => {
+        setMessages((prevMessages) => [...prevMessages, message]);
+    };
 
     useEffect(() => {
-        fetchChatData();
+        connection.on('newMessage', handleNewMessage);
 
-        const connection = new signalR.HubConnectionBuilder()
-            .withUrl("/message")
-            .withAutomaticReconnect()
-            .build();
+        const startConnection = async () => {
+            try {
+                await connection.start().catch(err => console.log("Тууут", err));
+                console.log('SignalR connected.');
+                fetchChatData();
+            } catch (error) {
+                console.log('Ошибка при подключении к SignalR: ', error);
+            }
+        };
 
-        connection
-            .start()
-            .then(() => {
-                console.log("SignalR connection started");
-            })
-            .catch(error => console.log("Error starting SignalR connection:", error));
-
-        connection.on("sendToReact", messages => {
-            console.log("sendToReact");
-            console.log(messages);
-            setMessages(messages);
-        });
-
-        setHubConnection(connection);
+        startConnection();
 
         return () => {
+            connection.off('newMessage', handleNewMessage);
             connection.stop();
         };
     }, []);
 
-    
-
     async function fetchChatData() {
-        fetch('/api/message/fetch-messages/1', {
+        fetch('/api/chats/fetch-messages/1', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
@@ -53,8 +55,11 @@ const ChatAllUsers = () => {
                 if (response.ok) {
                     const fetchData = await response.json();
                     console.log(fetchData);
-                    console.log("успешное получение данных:", fetchData.messages);
+                    console.log("успешное получение данных");
+                    console.log(fetchData.messages);
                     setMessages(fetchData.messages || []);
+                    console.log(fetchData.messages);
+
                 } else {
                     console.log('Ошибка получения данных');
                 }
@@ -71,18 +76,12 @@ const ChatAllUsers = () => {
     const handleSendMessage = () => {
         if (newMessage.trim() !== '') {
             const message = {
-                message: newMessage,
+                text: newMessage,
                 senderid: userName,
                 chatid: 1,
             };
 
-
-            /*hubConnection.invoke("Send", message)
-                .catch(function (err) {
-                    console.error(err.toString());
-                });*/
-
-            fetch('/api/message/сreate-message', {
+            fetch('/api/chats/send-message', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
@@ -109,7 +108,7 @@ const ChatAllUsers = () => {
             <h2>Чат всех пользователей</h2>
             <h2 style={{ color: 'purple' }}>Вы являетесь: {userName}</h2>
             <div className="messages">
-                {messages.slice(-15).map((message) => (
+                {messages.map((message) => (
                     <div key={message.id}>
                         <span style={{ color: 'red' }}>[{message.sentAt}]</span>
                         <span style={{

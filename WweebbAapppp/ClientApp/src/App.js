@@ -73,7 +73,7 @@ class App extends Component {
             }
 
             console.log("if (accessToken && !isAccessTokenExpired");
-            const response = await fetch('https://localhost:7089/api/Users/generate-new-token', {
+            const response = await fetch('/api/Users/generate-new-token', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
