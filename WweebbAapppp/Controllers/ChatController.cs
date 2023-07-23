@@ -30,6 +30,7 @@ namespace WweebbAapppp.Controllers
             _vehicleQuotesContext = vehicleQuotesContext;
         }
 
+        [Authorize]
         [HttpPost("сreate-message")]
         public async Task<IActionResult> Create(MessageDto messageDto)
         {
@@ -57,7 +58,9 @@ namespace WweebbAapppp.Controllers
 
                 var messages = _vehicleQuotesContext.Messages.ToList();
 
-                await _messageHub.Clients.All.SendAsync("sendToReact", messages); //_vehicleQuotesContext.Messages);
+                var data = new { UserId = userId, Messages = messages };
+
+                await _messageHub.Clients.All.SendAsync("sendToReact", data); //_vehicleQuotesContext.Messages);
             }
             catch (Exception ex)
             {

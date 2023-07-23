@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace WweebbAapppp.Hubs
 {
-    //[Authorize]
+    /*[Authorize]*/
     public class MessageHub : Hub
     {
         /*public async Task SendMessage(string message)

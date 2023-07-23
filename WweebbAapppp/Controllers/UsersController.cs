@@ -382,14 +382,14 @@ namespace VehicleQuotes.Controllers
             try
             {
                 var email = new MimeMessage();
-                email.From.Add(MailboxAddress.Parse("ward.moen2@ethereal.email"));
-                email.To.Add(MailboxAddress.Parse("ward.moen2@ethereal.email"));
+                email.From.Add(MailboxAddress.Parse("annetta39@ethereal.email"));
+                email.To.Add(MailboxAddress.Parse("annetta39@ethereal.email"));
                 email.Subject = "Test Email Subject";
                 email.Body = new TextPart(TextFormat.Html) { Text = body };
 
                 using var smtp = new SmtpClient();
                 smtp.Connect("smtp.ethereal.email", 587, SecureSocketOptions.StartTls);
-                smtp.Authenticate("ward.moen2@ethereal.email", "cypE5NAN9SHkwRuc5D");
+                smtp.Authenticate("annetta39@ethereal.email", "gbuvKhEDcW6tgDU8d3");
                 smtp.Send(email);
                 smtp.Disconnect(true);
 
